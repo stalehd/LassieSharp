@@ -1,3 +1,18 @@
+/*
+ Copyright 2017 Telenor Digital AS
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 using System;
 using Xunit;
 using System.Threading.Tasks;
@@ -6,7 +21,8 @@ namespace LassieTest
 {
     public class ClientTest
     {
-        string  NewRandomEUI() {
+        string NewRandomEUI()
+        {
             var bytes = new byte[8];
             var r = new Random();
             r.NextBytes(bytes);
@@ -18,16 +34,16 @@ namespace LassieTest
 
 
         [Fact]
-        public async Task TestCreateAndDeleteApplicationAsync() 
+        public async Task TestCreateAndDeleteApplicationAsync()
         {
             var c = new Lassie.Client();
             var app = await c.CreateApplicationAsync(new Lassie.Application());
             Assert.NotNull((app));
             await c.DeleteApplicationAsync(app.ApplicationEUI);
-        }             
+        }
 
         [Fact]
-        public async Task TestUpdateApplicationAsync() 
+        public async Task TestUpdateApplicationAsync()
         {
             var c = new Lassie.Client();
             var app = await c.CreateApplicationAsync(new Lassie.Application());
@@ -42,7 +58,8 @@ namespace LassieTest
         public async Task TestCreateAndDeleteGatewayAsync()
         {
             var c = new Lassie.Client();
-            var template = new Lassie.Gateway { 
+            var template = new Lassie.Gateway
+            {
                 GatewayEUI = NewRandomEUI().ToString(),
                 IP = "127.0.0.1",
                 StrictIP = false,
@@ -56,7 +73,7 @@ namespace LassieTest
         }
 
         [Fact]
-        public async Task TestUpdateGatewayAsync() 
+        public async Task TestUpdateGatewayAsync()
         {
             var c = new Lassie.Client();
             var template = new Lassie.Gateway
@@ -85,7 +102,7 @@ namespace LassieTest
         }
 
         [Fact]
-        public async Task TestAddRemoveDevice() 
+        public async Task TestAddRemoveDevice()
         {
             var c = new Lassie.Client();
             var app = await c.CreateApplicationAsync(new Lassie.Application());

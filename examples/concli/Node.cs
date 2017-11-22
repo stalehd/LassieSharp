@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+ Copyright 2017 Telenor Digital AS
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+using System;
 using System.Collections.Generic;
 namespace concli
 {
@@ -17,13 +32,15 @@ namespace concli
 
         public Node Parent { get; set; }
 
-        string AncestorPath(string child) {
-            if (Parent == null) {
+        string AncestorPath(string child)
+        {
+            if (Parent == null)
+            {
                 return child;
             }
             return Parent.AncestorPath(("/" + Name + child));
         }
-        public string FullPath { get { return AncestorPath(""); }}
+        public string FullPath { get { return AncestorPath(""); } }
     }
 
     public class NodeTree
@@ -36,7 +53,8 @@ namespace concli
             Name = ""
         };
 
-        Node DataNodeFromDevice(string appEUI, Lassie.Device device, Node parent) {
+        Node DataNodeFromDevice(string appEUI, Lassie.Device device, Node parent)
+        {
             var dataNode = new Node { Parent = parent, Name = "messages" };
             dataNode.Children = () => new List<Node>();
             dataNode.Attributes = () =>
@@ -45,7 +63,8 @@ namespace concli
                 var data = client.GetDeviceDataAsync(appEUI, device.DeviceEUI);
                 data.Wait();
                 attrs.Add(String.Format("{0:-40} {1:-20} {2:-10} {3:-10}", "Data", "RSSI", "SNR", "Freq"));
-                foreach (Lassie.DeviceData d in data.Result.Messages) {
+                foreach (Lassie.DeviceData d in data.Result.Messages)
+                {
                     attrs.Add(String.Format("{0:-40} {1:-20} {2:-10} {3:-10}", d.HexData, d.RSSI, d.SNR, d.Frequency));
                 }
                 return attrs;
@@ -56,7 +75,8 @@ namespace concli
         Node DeviceNodeFromDevice(string appEUI, Lassie.Device device, Node parent)
         {
             var deviceNode = new Node { Parent = parent, Name = device.DeviceEUI };
-            deviceNode.Children = () => { 
+            deviceNode.Children = () =>
+            {
                 var ret = new List<Node>();
                 ret.Add(DataNodeFromDevice(appEUI, device, deviceNode));
                 return ret;
@@ -121,7 +141,8 @@ namespace concli
             return appEntry;
         }
 
-        Node GwNodeFromGateway(Lassie.Gateway gw, Node parent) {
+        Node GwNodeFromGateway(Lassie.Gateway gw, Node parent)
+        {
             var gwEntry = new Node
             {
                 Parent = parent,
@@ -179,7 +200,8 @@ namespace concli
                 var g = new List<Node>();
                 var gl = client.ListGatewaysAsync();
                 gl.Wait();
-                foreach (Lassie.Gateway gw in gl.Result.Gateways) {
+                foreach (Lassie.Gateway gw in gl.Result.Gateways)
+                {
                     g.Add(GwNodeFromGateway(gw, gateways));
                 }
                 return g;
